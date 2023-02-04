@@ -42,48 +42,6 @@ int main(int argc, char* argv[])
 
   */
 
-  //unsigned int N = 25;
-  //Lattice lattice(N,N);
-  ////lattice.PrintLattice();
-  //
-  //// set initial kT value
-  //float kT = 1.0f;
-  //float kTmax = 3.0f;
-  //// step = number of steps to be taken to go to the next (hopefully independent) configuration
-  //unsigned int step = N*N;
-  //// eqSteps = num steps to equilibiriate
-  //unsigned int eqSteps = 100;
-  //// num steps to traverse temperature
-  //unsigned int nTSteps = 1000;
-
-  //std::cout<<"Magnetisation : "<<lattice.Magnetisation()<<std::endl;
-
-  //Metropolis metropolis(lattice);
-
-  //// equilibiriate
-  //metropolis.MCSBy(eqSteps*step, kT, 1, true);
-  //
-  //std::cout<<"Magnetisation : "<<lattice.Magnetisation()<<std::endl;
-
-  ////lattice.PrintLattice();
-
-  //// Vary temp for nTSteps steps, disable debugging cout
-  //std::cout.setstate(std::ios_base::failbit);
-  //float tStep = (kTmax - kT) / nTSteps;
-  //for(unsigned int i=0; i<nTSteps; i++)
-  //{
-  //  metropolis.MCSBy(step ,kT, 1, true);
-  //  kT += tStep;
-  //}
-  //std::cout.clear();
-  //
-  ////metropolis.StepBy(20000, kT, 1, true);
-
-  //std::cout<<"Magnetisation : "<<lattice.Magnetisation()<<std::endl;
-
-  //metropolis.WriteM("./MData7");
-  //metropolis.WriteE("./EData7");
-
   unsigned int N = 25;
   Lattice lattice(N,N);
   Metropolis met(lattice);
@@ -93,7 +51,7 @@ int main(int argc, char* argv[])
   float kT = 1.0f;
   float kTmax = 5.0f;
   // t steps
-  unsigned int numSteps = 70;
+  unsigned int numSteps = 20;
   // samples per step for average
   unsigned int numSamplesMax = 100000;
   unsigned int numSamplesMin = 64;
@@ -102,13 +60,15 @@ int main(int argc, char* argv[])
   // number of MCS to equilibiriate
   unsigned int numEq = 100;
   // min error
-  float minError = 0.005f;
+  float minError = 0.0005f;
 
   std::cout<<"Magnetisation|kT|sigma_M\n";
   for(unsigned int i=0; i<numSteps; i++)
   {
-    float kTval = kT + (((kTmax-kT) / numSteps)*i);
-    met.Step(minError, numSamplesMin, numSamplesMax, MCSPerSample, numEq, kTval, 1, false);
+    //float kTval = kT + (((kTmax-kT) / numSteps)*i);
+    //met.Step(minError, numSamplesMin, numSamplesMax, MCSPerSample, numEq, kTval, 1, false);
+    
+    met.Step(minError, numSamplesMin, (i+1)*1000, MCSPerSample, numEq, 4.0f, 1, false);
   }
 
 

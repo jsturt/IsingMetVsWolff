@@ -74,7 +74,7 @@ void Metropolis::Step(float errorMin, unsigned int samplesMin, unsigned int samp
   MCSBy(nEqMCS, kT, J, save);
 
   // Perform samples
-  float sum=0, sum_sqd=0, avg_mag=0, avg=0, std_dev=0;
+  float sum=0, sum_sqd=0, avg_mag=0, avg=0, std_err=0;
   unsigned int nSamples=0;
   while(nSamples<samplesMax+1)
   {
@@ -90,13 +90,14 @@ void Metropolis::Step(float errorMin, unsigned int samplesMin, unsigned int samp
     if(nSamples >= samplesMin && !(nSamples&0x3))
     {
       avg = sum / nSamples;
-      std_dev = sqrt((sum_sqd/nSamples) - avg*avg);
-      if(std_dev < errorMin) break;
+      std_err = sqrt(((sum_sqd/nSamples) - avg*avg) / nSamples);
+      if(std_err < errorMin) break;
     }
   }
     avg = sum / nSamples;
-    std_dev = sqrt((sum_sqd/nSamples) - avg*avg);
-    std::cout<<avg<<" "<<kT<<" "<<std_dev<<"\n";
+    std_err = sqrt(((sum_sqd/nSamples) - avg*avg) / nSamples);
+    std::cout<<std_err<<" "<<nSamples<<"\n";
+    //std::cout<<avg<<" "<<kT<<" "<<std_err<<"\n";
 }
 
 void Metropolis::WriteLattice(std::string filepath)
